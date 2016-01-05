@@ -1,0 +1,20 @@
+{
+  "name": "openam_rest_client",
+  "version": "0.1.0",
+  "description": "OpenAM REST Client for Node.js",
+  "main": "mocha test",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "author": "Juan Antonio Breña Moral <juan.brena.external@atos.net >",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "bluebird": "3.0.5",
+    "request": "2.65.0"
+  },
+  "devDependencies": {
+    "chai": "3.4.1",
+    "mocha": "2.3.4",
+    "nconf": "^0.8.2"
+  }
+}
