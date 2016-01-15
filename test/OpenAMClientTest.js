@@ -9,8 +9,10 @@ OpenAMClient = new OpenAMClient();
 var nconf = require('nconf');
 nconf.argv().env().file({ file: 'config.json' });
 var endpoint = nconf.get('endpoint');
+var user1 = nconf.get('user1');
+var password1 = nconf.get('password1');
 
-describe("OpenAM Client", function () {
+describe("OpenAM REST Client", function () {
     "use strict";
 
     function sleep(time, callback) {
@@ -20,6 +22,42 @@ describe("OpenAM Client", function () {
         }
         callback();
     }
+
+    it("Authentication OK", function () {
+        this.timeout(5000);
+
+        var token = null;
+
+        OpenAMClient.setEndPoint(endpoint);
+        OpenAMClient.setCredential(user1, password1);
+
+        return OpenAMClient.authenticate().then(function (result) {
+            token = result.tokenId;
+            expect(token).is.a("string");
+        }).then(function (result) {
+            return OpenAMClient.logout(token);
+        }).then(function (result) {
+            expect(true).is.a("boolean");                  
+        });
+
+    });
+
+    it("Authentication KO", function () {
+        this.timeout(5000);
+
+        var token = null;
+
+        OpenAMClient.setEndPoint(endpoint);
+        OpenAMClient.setCredential(user1, password1 + "1");
+
+        return OpenAMClient.authenticate().then(function (result) {
+            //console.log(result);
+        }).catch(function (reason) {
+            var result = JSON.parse(reason);
+            expect(result.code).to.be.equal(401);
+        });
+
+    });
 
     it.skip("Update inactivity session status", function () {
         this.timeout(500000);
@@ -147,47 +185,11 @@ describe("OpenAM Client", function () {
 
     });
 
-    it("Authentication OK", function () {
-        this.timeout(5000);
 
-        var username = "school1teacher1";
-        var password = "12345678";
-        var token = null;
 
-        OpenAMClient.setEndPoint(endpoint);
-        OpenAMClient.setCredential(username, password);
 
-        return OpenAMClient.authenticate().then(function (result) {
-            token = result.tokenId;
-            expect(token).is.a("string");
-        }).then(function (result) {
-            return OpenAMClient.logout(token);
-        }).then(function (result) {
-            expect(true).is.a("boolean");                  
-        });
 
-    });
-
-    it("Authentication KO", function () {
-        this.timeout(5000);
-
-        var username = "school1teacher1";
-        var password = "123456789";
-        var token = null;
-
-        OpenAMClient.setEndPoint(endpoint);
-        OpenAMClient.setCredential(username, password);
-
-        return OpenAMClient.authenticate().then(function (result) {
-            //console.log(result);
-        }).catch(function (reason) {
-            var result = JSON.parse(reason);
-            expect(result.code).to.be.equal(401);
-        });
-
-    });
-
-    it("Authentication & Authorization with ADMIN privileges", function () {
+    it.skip("Authentication & Authorization with ADMIN privileges", function () {
         this.timeout(5000);
 
         var username = "school1teacher1";
@@ -215,7 +217,7 @@ describe("OpenAM Client", function () {
 
     });
 
-    it("Authentication & Authorization with READER privileges", function () {
+    it.skip("Authentication & Authorization with READER privileges", function () {
         this.timeout(5000);
 
         var username = "aguila_roja_1";
@@ -242,7 +244,7 @@ describe("OpenAM Client", function () {
 
     });
 
-    it("Authentication & Authorization with an User without privileges", function () {
+    it.skip("Authentication & Authorization with an User without privileges", function () {
         this.timeout(5000);
 
         var username = "school2teacher1";
@@ -272,7 +274,7 @@ describe("OpenAM Client", function () {
 
     });
 
-    it("Authentication, Game Authorization & Service Authorization with an User with privileges", function () {
+    it.skip("Authentication, Game Authorization & Service Authorization with an User with privileges", function () {
         this.timeout(5000);
 
         var username = "school2teacher1";
