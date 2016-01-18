@@ -59,15 +59,72 @@ describe("OpenAM REST Client", function () {
 
     });
 
-    it.skip("Update inactivity session status", function () {
+    it("Authentication & Authorization", function () {
+        this.timeout(5000);
+
+        var username = "itinnovdemo01";
+        var password = "1pslcoopgame4u";
+        var token = null;
+        var application = "game1";
+        var resources = [];
+        resources.push("game1");
+
+        OpenAMClient.setEndPoint(endpoint);
+        OpenAMClient.setCredential(username, password);
+
+        return OpenAMClient.authenticate().then(function (result) {
+            token = result.tokenId;
+            return OpenAMClient.authorizate(token, application, resources);
+        }).then(function (result) {
+            expect(true).is.a("boolean");
+        }).then(function (result) {
+            return OpenAMClient.logout(token);
+        }).then(function (result) {
+            expect(true).is.a("boolean");                  
+        });
+
+    });
+
+    it("Authentication & Authorization with 2 apps", function () {
+        this.timeout(5000);
+
+        var username = "itinnovdemo01";
+        var password = "1pslcoopgame4u";
+        var token = null;
+        var application1 = "game1";
+        var resources1 = [];
+        resources1.push("game1");
+        var application2 = "pslcomponent1";
+        var resources2 = [];
+        resources2.push("pslcomponent1");
+
+        OpenAMClient.setEndPoint(endpoint);
+        OpenAMClient.setCredential(username, password);
+
+        return OpenAMClient.authenticate().then(function (result) {
+            token = result.tokenId;
+            return OpenAMClient.authorizate(token, application1, resources1);
+        }).then(function (result) {
+            return OpenAMClient.authorizate(token, application2, resources2);
+        }).then(function (result) {           
+            expect(true).is.a("boolean");
+        }).then(function (result) {
+            return OpenAMClient.logout(token);
+        }).then(function (result) {
+            expect(true).is.a("boolean");                  
+        });
+
+    });    
+
+    it("Update inactivity session status", function () {
         this.timeout(500000);
 
-        var username = "aguila_roja_1";
-        var password = "12345678";
+        var username = "itinnovdemo01";
+        var password = "1pslcoopgame4u";
         var token = null;
-        var application = "Game1";
+        var application = "game1";
         var resources = [];
-        resources.push("PROVIDER1");
+        resources.push("game1");
 
         OpenAMClient.setEndPoint(endpoint);
         OpenAMClient.setCredential(username, password);
@@ -104,6 +161,16 @@ describe("OpenAM REST Client", function () {
             }
             return OpenAMClient.getIdentityData(identityOptions)
         }).then(function (result) {
+            console.log("Refreshed session");
+            sleep(10000, function () {
+                console.log("10 seconds");
+            });
+            sleep(10000, function () {
+                console.log("10 seconds");
+            }); 
+            sleep(10000, function () {
+                console.log("10 seconds");
+            });                        
             return OpenAMClient.logout(token);
         }).then(function (result) {          
             expect(true).is.a("boolean");
@@ -111,15 +178,15 @@ describe("OpenAM REST Client", function () {
 
     });
 
-    it.skip("Force timeout problem", function () {
+    it.only("Force timeout problem", function () {
         this.timeout(500000);
 
-        var username = "aguila_roja_1";
-        var password = "12345678";
+        var username = "itinnovdemo01";
+        var password = "1pslcoopgame4u";
         var token = null;
-        var application = "Game1";
+        var application = "game1";
         var resources = [];
-        resources.push("PROVIDER1");
+        resources.push("game1");
 
         OpenAMClient.setEndPoint(endpoint);
         OpenAMClient.setCredential(username, password);
@@ -181,13 +248,43 @@ describe("OpenAM REST Client", function () {
         //    return OpenAMClient.logout(token);
         }).then(function (result) {          
             expect(true).is.a("boolean");
+        }).catch(function (reason) {
+            //console.log(reason)
+            var message ="com.sun.identity.idsvcs.TokenExpired";
+            expect(reason.indexOf(message)).to.not.equal(-1);
         });
 
     });
 
+    it.skip("Authentication & Authorization with ADMIN privileges", function () {
+        this.timeout(5000);
 
+        var username = "itinnovdemo01";
+        var password = "1pslcoopgame4u";
+        var token = null;
+        var application = "game1";
+        var resources = [];
+        resources.push("game1");
 
+        OpenAMClient.setEndPoint(endpoint);
+        OpenAMClient.setCredential(username, password);
 
+        return OpenAMClient.authenticate().then(function (result) {
+            console.log(result);
+            token = result.tokenId;
+            return OpenAMClient.authorizate(token, application, resources);
+        }).then(function (result) {
+            console.log(result);
+            //console.log(result[0].attributes.ADMIN[0]);
+            //expect(result[0].attributes.ADMIN[0]).is.a("string");
+            expect(true).is.a("boolean");
+        }).then(function (result) {
+            return OpenAMClient.logout(token);
+        }).then(function (result) {
+            expect(true).is.a("boolean");                  
+        });
+
+    });
 
     it.skip("Authentication & Authorization with ADMIN privileges", function () {
         this.timeout(5000);
