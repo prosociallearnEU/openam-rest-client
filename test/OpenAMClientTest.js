@@ -182,7 +182,7 @@ describe("OpenAM REST Client", function () {
 
         return OpenAMClient.authenticate().then(function (result) {
             token = result.tokenId;
-            return OpenAMClient.authorizate(token, app1, resources);
+            return OpenAMClient.authorizate(token, app1, resources1);
         }).then(function (result) {            
             sleep(10000, function () {
                 console.log("10 seconds");
