@@ -111,7 +111,7 @@ describe("OpenAM REST Client", function () {
 
     });    
 
-    it("Update inactivity session status", function () {
+    it.skip("Update inactivity session status", function () {
         this.timeout(500000);
 
         var token = null;
@@ -170,7 +170,7 @@ describe("OpenAM REST Client", function () {
 
     });
 
-    it("Force timeout problem", function () {
+    it.skip("Force timeout problem", function () {
         this.timeout(500000);
 
         var token = null;
